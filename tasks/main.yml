@@ -1,0 +1,37 @@
+- name: Copy CA file to local Trusted root CA store
+  copy: src="ca.crt" dest="/etc/ssl/certs/my-ca.crt"
+  #ags: certificate
+
+  #Step1 - Check if certificate file is in place
+- name: Check that the host certificate exists
+  stat:
+    path: /etc/ssl/private/{{inventory_hostname}}.{{local_domainname}}.key
+  register: stat_result
+  tags: certificate
+
+- debug: msg="File does not exist.. Running request script"
+  tags: certificate
+  when: stat_result.stat is defined and not stat_result.stat.exists
+
+
+- debug: msg="File exists, skipping"
+  tags: certificate
+  when: stat_result.stat is defined and stat_result.stat.exists
+
+  #Step2 - If certificate does not exist, copy down the batch file
+- name: "Copy certificate request script to /tmp ready for execution"
+  copy: src="requestCertificate.sh" dest=/tmp/reqCrt.sh mode=0700
+  when: stat_result.stat is defined and not stat_result.stat.exists
+  tags: certificate
+
+  #Step3 - Execute the batch file with environment variables
+- name: Request new certificate from Vault
+  shell: /tmp/reqCrt.sh
+  environment:
+    VAULT_ADDR: "{{ vault_address }}"
+    VAULT_TOKEN: "{{ vault_token }}"
+    VAULT_UNSEAL_KEY1: "{{ vault_unseal_key1 }}"
+    VAULT_UNSEAL_KEY2: "{{ vault_unseal_key2 }}"
+    VAULT_UNSEAL_KEY3: "{{ vault_unseal_key3 }}"
+  when: stat_result.stat is defined and not stat_result.stat.exists
+  tags: certificate
