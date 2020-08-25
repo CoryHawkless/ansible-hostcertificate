@@ -1,3 +1,7 @@
+
+- name: Install JQ
+  apt: name=jq state=latest update_cache=yes
+
 - name: Copy CA file to local Trusted root CA store
   copy: src="ca.crt" dest="/etc/ssl/certs/my-ca.crt"
   #ags: certificate
