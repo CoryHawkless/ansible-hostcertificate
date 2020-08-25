@@ -12,7 +12,8 @@ $VAULT_ADDR/v1/interca/issue/{{vaultStoreName}} > certificateResult.txt
 
 jq .data.private_key certificateResult.txt |  sed "s/\"//g" | sed "s/\\\n/\n/g" > cert.pem
 jq .data.certificate certificateResult.txt |  sed "s/\"//g" | sed "s/\\\n/\n/g" > cert.crt
-jq .data.ca_chain certificateResult.txt  |  sed "s/\"//g" | sed "s/\\\n/\n/g" > ca.crt
+jq .data.ca_chain[0] certificateResult.txt  |  sed "s/\"//g" | sed "s/\\\n/\n/g" > ca.crt
+jq .data.ca_chain[1] certificateResult.txt  |  sed "s/\"//g" | sed "s/\\\n/\n/g" >> ca.crt
 
 mv cert.pem /etc/ssl/private/$(hostname).{{local_domainname}}.key
 mv cert.crt /etc/ssl/certs/$(hostname).{{local_domainname}}.crt
