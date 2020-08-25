@@ -4,7 +4,7 @@
 
 - name: Copy CA file to local Trusted root CA store
   copy: src="ca.crt" dest="/etc/ssl/certs/my-ca.crt"
-  #ags: certificate
+  tags: certificate
 
   #Step1 - Check if certificate file is in place
 - name: Check that the host certificate exists

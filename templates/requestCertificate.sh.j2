@@ -8,7 +8,7 @@ CERTNAME=$(hostname).{{local_domainname}}
 curl --header "X-Vault-Token: $VAULT_TOKEN" \
 --request POST \
 --data '{"common_name": "'$CERTNAME'", "ttl": "43800h"}' \
-$VAULT_ADDR/v1/interca/issue/{{vaultStoreName}} > certificateResult.txt
+$VAULT_ADDR/v1/rootca_store/issue/{{vaultStoreRole}} > certificateResult.txt
 
 jq .data.private_key certificateResult.txt |  sed "s/\"//g" | sed "s/\\\n/\n/g" > cert.pem
 jq .data.certificate certificateResult.txt |  sed "s/\"//g" | sed "s/\\\n/\n/g" > cert.crt
@@ -21,4 +21,3 @@ mv ca.crt /etc/ssl/certs/{{local_domainname}}-CA-chain.crt
 
 
 #rm certificateResult.txt
- 
