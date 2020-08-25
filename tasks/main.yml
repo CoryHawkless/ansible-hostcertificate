@@ -24,7 +24,7 @@
 
   #Step2 - If certificate does not exist, copy down the batch file
 - name: "Copy certificate request script to /tmp ready for execution"
-  copy: src="requestCertificate.sh" dest=/tmp/reqCrt.sh mode=0700
+  template: src="requestCertificate.sh.j2" dest=/tmp/reqCrt.sh mode=0700
   when: stat_result.stat is defined and not stat_result.stat.exists
   tags: certificate
 
