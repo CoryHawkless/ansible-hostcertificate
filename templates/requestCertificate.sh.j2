@@ -4,7 +4,7 @@ curl --request POST --data '{"key": "'$VAULT_UNSEAL_KEY1'"}'  $VAULT_ADDR/v1/sys
 curl --request POST --data '{"key": "'$VAULT_UNSEAL_KEY2'"}'  $VAULT_ADDR/v1/sys/unseal
 curl --request POST --data '{"key": "'$VAULT_UNSEAL_KEY3'"}'  $VAULT_ADDR/v1/sys/unseal
 
-CERTNAME=$(hostname).{{local_domainname}}
+CERTNAME=$(hostname).{{ local_domainname }}
 curl --header "X-Vault-Token: $VAULT_TOKEN" \
 --request POST \
 --data '{"common_name": "'$CERTNAME'", "ttl": "43800h"}' \
@@ -19,9 +19,9 @@ jq .data.ca_chain[0] certificateResult.txt  |  sed "s/\"//g" | sed "s/\\\n/\n/g"
 jq .data.ca_chain[1] certificateResult.txt  |  sed "s/\"//g" | sed "s/\\\n/\n/g" >> ca.crt.tmp
 grep ca.crt.tmp -v -e null > ca.crt
 
-mv cert.pem /etc/ssl/private/$(hostname).{{local_domainname}}.key
-mv cert.crt /etc/ssl/certs/$(hostname).{{local_domainname}}.crt
-mv ca.crt /etc/ssl/certs/{{local_domainname}}-CA-chain.crt
+mv cert.pem /etc/ssl/private/$(hostname).{{ local_domainname }}.key
+mv cert.crt /etc/ssl/certs/$(hostname).{{ local_domainname }}.crt
+mv ca.crt /etc/ssl/certs/{{ local_domainname }}-CA-chain.crt
 
 
 #rm certificateResult.txt

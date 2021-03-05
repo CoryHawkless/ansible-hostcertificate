@@ -9,7 +9,7 @@
   #Step1 - Check if certificate file is in place
 - name: Check that the host certificate exists
   stat:
-    path: /etc/ssl/private/{{inventory_hostname}}.{{local_domainname}}.key
+    path: /etc/ssl/private/{{ inventory_hostname }}.{{ local_domainname }}.key
   register: stat_result
   tags: certificate
 
